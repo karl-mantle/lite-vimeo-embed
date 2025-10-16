@@ -153,6 +153,9 @@ class LiteVimeo extends (globalThis.HTMLElement ?? class {}) {
   }
 
   addIframe() {
+    const params = new URLSearchParams(this.getAttribute("params") || []);
+    params.append("autoplay", "1");
+
     if (this.classList.contains('ltv-activated')) return;
     this.classList.add('ltv-activated');
 
@@ -164,7 +167,9 @@ class LiteVimeo extends (globalThis.HTMLElement ?? class {}) {
     iframeEl.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
     // AFAIK, the encoding here isn't necessary for XSS, but we'll do it only because this is a URL
     // https://stackoverflow.com/q/64959723/89484
-    iframeEl.src = `https://player.vimeo.com/video/${encodeURIComponent(this.videoId)}?autoplay=1`;
+    iframeEl.src = `https://player.vimeo.com/video/${encodeURIComponent(
+      this.videoId
+    )}?${params.toString()}`;
     this.append(iframeEl);
 
     // Set focus for a11y
